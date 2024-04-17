@@ -43,12 +43,13 @@ jobs:
 
       - name: Decode file content and create a new branch
         run: |
-          git fetch origin ${{ github.event.inputs.branch_name }}
           BRANCH_EXISTS=$(git ls-remote --heads origin ${{ github.event.inputs.branch_name }} | grep -q ${{ github.event.inputs.branch_name }} && echo "true" || echo "false")
           echoe "Branch exists: $BRANCH_EXISTS"
 
           if [[ "$BRANCH_EXISTS" == "true" ]]; then
+            git fetch origin ${{ github.event.inputs.branch_name }}
             git checkout -b ${{ github.event.inputs.branch_name }} origin/${{ github.event.inputs.branch_name }}
+            git pull --rebase origin ${{ github.event.inputs.branch_name }}
           else
             git checkout -b ${{ github.event.inputs.branch_name }}
           fi
@@ -56,9 +57,6 @@ jobs:
           echo "${{ github.event.inputs.file_content }}" | base64 -d > "${{ github.event.inputs.file_path }}"
           git add ${{ github.event.inputs.file_path }}
           git commit -m "Committing changes generated from codegen"
-          if [[ "$BRANCH_EXISTS" == "true" ]]; then
-            git pull --rebase origin ${{ github.event.inputs.branch_name }}
-          fi
           git push origin ${{ github.event.inputs.branch_name }}
 
       - name: Create Pull Request using GitHub CLI
