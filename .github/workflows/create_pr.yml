@@ -23,10 +23,17 @@ jobs:
   create_pr:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          # required
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
       - name: Checkout the repository
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.PAT_GITHUB_PR }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up Git identity
         run: |
@@ -48,4 +55,4 @@ jobs:
                        --base main \
                        --head ${{ github.event.inputs.branch_name }}
         env:
-          GH_TOKEN: ${{ secrets.PAT_GITHUB_PR }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token}}
