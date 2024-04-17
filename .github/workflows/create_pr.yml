@@ -45,6 +45,7 @@ jobs:
         run: |
           git fetch origin ${{ github.event.inputs.branch_name }}
           BRANCH_EXISTS=$(git ls-remote --heads origin ${{ github.event.inputs.branch_name }} | grep -q ${{ github.event.inputs.branch_name }} && echo "true" || echo "false")
+          echoe "Branch exists: $BRANCH_EXISTS"
 
           if [[ "$BRANCH_EXISTS" == "true" ]]; then
             git checkout -b ${{ github.event.inputs.branch_name }} origin/${{ github.event.inputs.branch_name }}
