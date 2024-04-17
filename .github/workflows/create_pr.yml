@@ -44,7 +44,6 @@ jobs:
       - name: Decode file content and create a new branch
         run: |
           BRANCH_EXISTS=$(git ls-remote --heads origin ${{ github.event.inputs.branch_name }} | grep -q ${{ github.event.inputs.branch_name }} && echo "true" || echo "false")
-          echoe "Branch exists: $BRANCH_EXISTS"
 
           if [[ "$BRANCH_EXISTS" == "true" ]]; then
             git fetch origin ${{ github.event.inputs.branch_name }}
