@@ -58,7 +58,14 @@ jobs:
           git commit -m "Committing changes generated from codegen"
           git push origin ${{ github.event.inputs.branch_name }}
 
+      - name: Check if PR already exists
+        id: pr-check
+        run: |
+          PR_EXISTS=$(gh pr list --base main --head ${{ github.event.inputs.branch_name }} | grep -q ${{ github.event.inputs.branch_name }} && echo "true" || echo "false")
+          echo "exists=$PR_EXISTS" >> $GITHUB_OUTPUT
+
       - name: Create Pull Request using GitHub CLI
+        if: steps.pr-check.outputs.exists == 'false'
         run: |
           gh pr create --title "${{ github.event.inputs.title }}" \
                        --body "${{ github.event.inputs.body }}" \
