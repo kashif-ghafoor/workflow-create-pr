@@ -38,6 +38,8 @@ jobs:
           git add ${{ github.event.inputs.file_path }}
           git commit -m "Committing changes from action input"
           git push origin ${{ github.event.inputs.branch_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB_PR }}
 
       - name: Create Pull Request using GitHub CLI
         run: |
@@ -46,4 +48,4 @@ jobs:
                        --base main \
                        --head ${{ github.event.inputs.branch_name }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB_PR }}
