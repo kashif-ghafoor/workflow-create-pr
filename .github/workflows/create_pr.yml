@@ -26,6 +26,11 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
 
+      - name: Set up Git identity
+        run: |
+          git config --local user.email "codegen@durablealpha.com"
+          git config --local user.name "Codegen Bot"
+
       - name: Decode file content and create a new branch
         run: |
           echo "${{ github.event.inputs.file_content }}" | base64 -d > "${{ github.event.inputs.file_path }}"
