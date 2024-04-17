@@ -63,6 +63,8 @@ jobs:
         run: |
           PR_EXISTS=$(gh pr list --base main --head ${{ github.event.inputs.branch_name }} | grep -q ${{ github.event.inputs.branch_name }} && echo "true" || echo "false")
           echo "exists=$PR_EXISTS" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token}}
 
       - name: Create Pull Request using GitHub CLI
         if: steps.pr-check.outputs.exists == 'false'
